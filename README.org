@@ -14,7 +14,7 @@ Notify a Discord channel when repos are updated
 ./gitwatch.ros migrate
    #+end_src
 
-2. Add repositorys to watch
+2. Add repositories to watch
    #+begin_src shell
 ./gitwatch.ros repo add https://github.com/garlic0x1/gitwatch.git
    #+end_src
