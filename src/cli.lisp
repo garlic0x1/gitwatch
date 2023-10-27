@@ -72,11 +72,24 @@
    :name "scrape" :description "Scrape repos and mail new commits"
    :handler (lambda (_cmd) (declare (ignore _cmd))
               (dolist (repo (mito:select-dao 'db:repository))
-                (let ((new (scraper:last-commit repo))
-                      (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo))))
-                  (unless (string= (db::commit-link new) (db::commit-link old))
+                (let* ((new (scraper:last-commit repo))
+                       (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
+                       (same (and old (string= (db::commit-link new) (db::commit-link old)))))
+
+                  (format t "new: ~a~%old: ~a~%same: ~a~%" new old same)
+
+                  ;;       old  same
+                  ;; nop    t     t
+                  ;; send   t     f
+                  ;; send   f     t
+                  ;; send   f     f
+
+
+                  (when (not (and old same))
                     (mailer:send new)
-                    (mito:update-dao new))
+                    (if old
+                        (mito:update-dao new)
+                        (mito:insert-dao new)))
 
 
                   ;; (mailer:send

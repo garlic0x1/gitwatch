@@ -1,5 +1,5 @@
 (defpackage mailer
-  (:use :cl :alexandria-2 :db)
+  (:use :cl :alexandria-2)
   (:export #:send))
 (in-package :mailer)
 
@@ -41,17 +41,22 @@
 (defgeneric send (obj)
   (:method ((obj null)) nil)
 
-  (:method ((obj commit))
+  (:method ((obj db:commit))
     (discord-send
      (db::commit-author obj)
      (format nil "~a" (db::commit-link obj))))
 
-  (:method ((obj issue))
+  (:method ((obj db:last-commit))
+    (discord-send
+     (db::last-commit-author obj)
+     (format nil "~a" (db::last-commit-link obj))))
+
+  (:method ((obj db:issue))
     (discord-send
      (db::issue-author obj)
      (format nil "~a" (db::issue-link obj))))
 
-  (:method ((obj pull-request))
+  (:method ((obj db:pull-request))
     (discord-send
      (db::pull-request-author obj)
      (format nil "~a" (db::pull-request-link obj)))))
