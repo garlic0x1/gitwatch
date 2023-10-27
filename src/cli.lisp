@@ -72,9 +72,10 @@
    :name "scrape" :description "Scrape repos and mail new commits"
    :handler (lambda (_cmd) (declare (ignore _cmd))
               (dolist (repo (mito:select-dao 'db:repository))
-                (dolist (commit (scraper:commits repo))
-                  (when-let ((new-commit (ignore-errors (mito:insert-dao commit))))
-                    (mailer:send new-commit)))))))
+                (mailer:send
+                 (ignore-errors
+                  (mito:insert-dao
+                   (scraper:last-commit repo))))))))
 
 ;;
 ;; Top level command

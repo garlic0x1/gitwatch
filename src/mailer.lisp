@@ -8,7 +8,9 @@
 ;; (change hook)
 ;;
 
-(defparameter discord-hook "https://discord.com/api/webhooks/1167359709385334806/uZRqye9xYQNbJwN4c4ZP2t44xDSc19gPEt4Lp52eh1VbiO5ti8j7ozgfOk1lEmWUXH5a")
+(defparameter discord-hook
+  "https://discord.com/api/webhooks/1167371572424753274/Ox8iitQ53rRmpNNZA4QAtFOYA68KWsNi9t3N2nB7p5JLGP1oiTiUpX-It38MCoU-nE6a"
+  )
 (defparameter discord-headers `(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18")
                                 ("Content-Type" . "application/json")))
 
@@ -37,6 +39,8 @@
 ;;
 
 (defgeneric send (obj)
+  (:method ((obj null)) nil)
+
   (:method ((obj commit))
     (discord-send
      (db::commit-author obj)

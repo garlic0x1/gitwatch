@@ -1,6 +1,6 @@
 (defpackage scraper
   (:use :cl :alexandria-2 :binding-arrows :utils)
-  (:export #:commits))
+  (:export #:commits #:last-commit))
 (in-package :scraper)
 
 (defun node-to-entry (repo node)
@@ -27,5 +27,15 @@
      (xmls:parse)
      (xmls:node-children)
      (remove-if-not (lambda (it) (string-equal :entry (xmls:node-name it))))
-     (mapcar (curry #'node-to-entry repo))
-     (first))))
+     (mapcar (curry #'node-to-entry repo)))))
+
+(defun last-commit (repo)
+  (ignore-errors
+   (->>
+     (format nil "http://~a/~a/~a/commits.atom" (db::repository-host repo) (db::repository-user repo) (db::repository-repo repo) )
+     (print)
+     (dex:get)
+     (xmls:parse)
+     (xmls:node-children)
+     (find-if (lambda (it) (string-equal :entry (xmls:node-name it))))
+     (node-to-entry))))
