@@ -4,6 +4,7 @@ Notify a Discord channel when repos are updated
 
 * Usage
 1. Set up
+
    The executable has a `migrate` subcommand to set up DB
    #+begin_src shell
 ./gitwatch.ros migrate
@@ -19,6 +20,7 @@ Notify a Discord channel when repos are updated
    #+end_src
 
 3. Scrape on cron
+
    Add this to your crontab
    #+begin_src
 * * * * * ~/common-lisp/gitwatch/gitwatch.ros scrape

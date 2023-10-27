@@ -6,7 +6,9 @@
                :quri :mito
                :str :trivia
                :yason :xmls)
-  :components ((:module "src"
+  :components ((:module "config"
+                :components ((:file "secrets")))
+               (:module "src"
                 :components ((:file "db")
                              (:file "utils")
                              (:file "mailer")

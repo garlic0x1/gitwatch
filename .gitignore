@@ -3,5 +3,6 @@
 *.log
 tmp/
 
+gitwatch
 *.fasl
 *.lx64fsl

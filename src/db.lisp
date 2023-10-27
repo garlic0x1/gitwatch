@@ -1,22 +1,7 @@
 (defpackage db
-  (:use :cl)
+  (:use :cl :alexandria-2)
   (:export #:migrate #:repository #:last-commit #:commit #:issue #:pull-request))
 (in-package :db)
-
-;;
-;; Establish database connection
-;; SQLite database is touched in Makefile so truename works
-;;
-
-(defparameter *db*
-  (mito:connect-toplevel
-   :postgres
-   :username "postgres"
-   :password "postgres"
-   :host "localhost"
-   :database-name "debug_test"
-   ;; (truename "~/.cache/git-notify.sqlite3")
-   ))
 
 ;;
 ;; Migration helpers
