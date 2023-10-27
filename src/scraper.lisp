@@ -27,4 +27,5 @@
      (xmls:parse)
      (xmls:node-children)
      (remove-if-not (lambda (it) (string-equal :entry (xmls:node-name it))))
-     (mapcar (curry #'node-to-entry repo)))))
+     (mapcar (curry #'node-to-entry repo))
+     (first))))

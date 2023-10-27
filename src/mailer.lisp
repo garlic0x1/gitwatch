@@ -8,9 +8,10 @@
 ;; (change hook)
 ;;
 
-(defparameter discord-hook "https://discord.com/api/webhooks/1157233913882738729/4XtJzd8RYqY6GNnPVO18T3suZzvvwN3e0nmydiTFBsGE_tT0NIPd4bSzhIfxCLwBDGuK")
+(defparameter discord-hook "https://discord.com/api/webhooks/1167359709385334806/uZRqye9xYQNbJwN4c4ZP2t44xDSc19gPEt4Lp52eh1VbiO5ti8j7ozgfOk1lEmWUXH5a")
 (defparameter discord-headers `(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18")
                                 ("Content-Type" . "application/json")))
+
 ;;
 ;; Client helper functions
 ;;
@@ -21,13 +22,15 @@
 (defun embed-image (url)
   (alist-hash-table `(("image" . ,(alist-hash-table `(("url" . ,url)))))))
 
-(defun discord-send (username message &key image)
+(defun discord-send (username message ;; &key image
+                     )
   (dex:post discord-hook
    :headers discord-headers
    :content (json-string (alist-hash-table
                           `(("username" . ,username)
                             ("content" . ,message)
-                            ,(when image `("embeds" . (,(embed-image image)))))))))
+                            ;; ,(when image `("embeds" . (,(embed-image image))))
+                            )))))
 
 ;;
 ;; Send a data model to discord

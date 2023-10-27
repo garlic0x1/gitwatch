@@ -1,7 +1,8 @@
 (defpackage utils
   (:use :cl :alexandria-2 :binding-arrows :xmls)
   (:export #:node-text #:node-child #:node-attr
-           #:make-repo))
+           #:make-repo
+           #:user-repos))
 (in-package :utils)
 
 ;;
@@ -36,3 +37,17 @@
          (user (first path))
          (repo (first (str:split "." (second path) :omit-nulls t))))
     (mito:make-dao-instance 'db:repository :link uri :host host :user user :repo repo)))
+
+;;
+;; Shell out to `gh` to list repos of user
+;; Easier to manage API tokens this way
+;;
+
+(defun user-repos (username)
+  (-<>
+    (format nil "gh api users/~a/repos" username)
+    (uiop:run-program <> :output :string)
+    (yason:parse <>)
+    (mapcar (curry #'gethash "clone_url") <>)
+    (mapcar #'make-repo <>)))
+

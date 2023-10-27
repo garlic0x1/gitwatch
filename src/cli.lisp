@@ -21,20 +21,37 @@
 
 (defvar repo/add
   (make-command
-   :name "add" :description "Add repos"
-   :handler (lambda (cmd) (mapcar (lambda (uri) (-> uri (print) (utils:make-repo) (mito:insert-dao)))
-                             (command-arguments cmd)))))
+   :name "add" :description "Add repo(s)"
+   :handler (lambda (cmd)
+              (->> (command-arguments cmd)
+                (mapcar #'utils:make-repo)
+                (mapcar #'mito:insert-dao)))))
+
+(defvar repo/add-user
+  (make-command
+   :name "add-user" :description "Add all public repos owned by user"
+   :handler (lambda (cmd)
+              (dolist (user (command-arguments cmd))
+                (dolist (repo (utils:user-repos user))
+                  (ignore-errors (mito:insert-dao repo)))))))
+
+(defvar repo/rm-user
+  (make-command
+   :name "rm-user" :description "Remove all repos owned by user(s)"
+   :handler (lambda (cmd)
+              (dolist (user (command-arguments cmd))
+                (mito:delete-by-values 'db:repository :user user)))))
 
 (defvar repo/rm
   (make-command
-   :name "rm" :description "Remove repos"
+   :name "rm" :description "Remove repo(s)"
    :handler (lambda (cmd) (mapcar (lambda (uri) (mito:delete-by-values 'db:repository :link uri))
                              (command-arguments cmd)))))
 
 (defvar repo
   (make-command
    :name "repo" :description "Manipulate repositories"
-   :sub-commands (list repo/ls repo/add repo/rm)
+   :sub-commands (list repo/ls repo/add repo/rm repo/add-user repo/rm-user)
    :handler (lambda (cmd) (print-usage-and-exit cmd t))))
 
 ;;
@@ -57,7 +74,6 @@
               (dolist (repo (mito:select-dao 'db:repository))
                 (dolist (commit (scraper:commits repo))
                   (when-let ((new-commit (ignore-errors (mito:insert-dao commit))))
-                    (format t "new commit: ~A" new-commit)
                     (mailer:send new-commit)))))))
 
 ;;
