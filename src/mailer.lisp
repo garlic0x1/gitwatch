@@ -6,11 +6,10 @@
 ;;
 ;; Parameters for discord client
 ;; (change hook)
+;; TODO clean this up, maybe store hooks in DB
 ;;
 
-(defparameter discord-hook
-  "https://discord.com/api/webhooks/1167371572424753274/Ox8iitQ53rRmpNNZA4QAtFOYA68KWsNi9t3N2nB7p5JLGP1oiTiUpX-It38MCoU-nE6a"
-  )
+(defparameter discord-hook "https://discord.com/api/webhooks/1167371572424753274/Ox8iitQ53rRmpNNZA4QAtFOYA68KWsNi9t3N2nB7p5JLGP1oiTiUpX-It38MCoU-nE6a")
 (defparameter discord-headers `(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18")
                                 ("Content-Type" . "application/json")))
 
@@ -46,7 +45,7 @@
 
   (:method ((obj db:last-commit))
     (discord-send
-     (format nil "New commit:~%  time: ~w~%  link:  ~a" (db::last-commit-time obj) (db::last-commit-link obj))
+     (format nil "commit: ~a~%time: ~a~%link: ~a" (db::last-commit-message) (db::last-commit-time obj) (db::last-commit-link obj))
      (db::last-commit-author obj)))
 
   (:method ((obj db:issue))

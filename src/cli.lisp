@@ -27,6 +27,12 @@
                 (mapcar #'utils:make-repo)
                 (mapcar #'mito:insert-dao)))))
 
+(defvar repo/rm
+  (make-command
+   :name "rm" :description "Remove repo(s)"
+   :handler (lambda (cmd) (mapcar (lambda (uri) (mito:delete-by-values 'db:repository :link uri))
+                             (command-arguments cmd)))))
+
 (defvar repo/add-user
   (make-command
    :name "add-user" :description "Add all public repos owned by user"
@@ -41,12 +47,6 @@
    :handler (lambda (cmd)
               (dolist (user (command-arguments cmd))
                 (mito:delete-by-values 'db:repository :user user)))))
-
-(defvar repo/rm
-  (make-command
-   :name "rm" :description "Remove repo(s)"
-   :handler (lambda (cmd) (mapcar (lambda (uri) (mito:delete-by-values 'db:repository :link uri))
-                             (command-arguments cmd)))))
 
 (defvar repo
   (make-command
@@ -76,40 +76,17 @@
                        (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
                        (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
 
-                  (format t "new: ~a~%old: ~a~%same: ~a~%" new old same)
-
-                  ;;       old  same
-                  ;; nop    t     t
-                  ;; send   t     f
-                  ;; nop    f     t
-                  ;; nop    f     f
-
+                  ;; cond table:
+                  ;;
+                  ;; input: | old  | same
+                  ;; nop    |  t   |   t
+                  ;; send   |  t   |   f
+                  ;; nop    |  f   |   t
+                  ;; nop    |  f   |   f
 
                   (cond
-                    ((and old (not same)) (progn (mailer:send new)
-                                                 (mito:update-dao new)))
-                    ((not old) (mito:insert-dao new)))
-
-                  ;;; BAD LOGIC (dont want spam on startup)
-                  ;;       old  same
-                  ;; nop    t     t
-                  ;; send   t     f
-                  ;; send   f     t
-                  ;; send   f     f
-
-
-                  ;; (when (and old (not same))
-                  ;;   (mailer:send new)
-                  ;;   (if old
-                  ;;       (mito:update-dao new)
-                  ;;       (mito:insert-dao new)))
-
-
-                  ;; (mailer:send
-                  ;;  (ignore-errors
-                  ;;   (mito:insert-dao
-                  ;;    (scraper:last-commit repo))))
-                  )))))
+                    ((and old (not same)) (progn (mailer:send new) (mito:update-dao new)))
+                    ((not old) (mito:insert-dao new))))))))
 
 ;;
 ;; Top level command
