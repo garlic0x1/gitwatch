@@ -21,18 +21,13 @@
 (defun json-string (obj)
   (with-output-to-string (stream) (yason:encode obj stream)))
 
-(defun embed-image (url)
-  (alist-hash-table `(("image" . ,(alist-hash-table `(("url" . ,url)))))))
-
-(defun discord-send (username message ;; &key image
-                     )
+(defun discord-send (message &optional username)
   (dex:post discord-hook
-   :headers discord-headers
-   :content (json-string (alist-hash-table
-                          `(("username" . ,username)
-                            ("content" . ,message)
-                            ,(when image `("embeds" . (,(embed-image image))))
-                            )))))
+            :headers discord-headers
+            :content (json-string
+                      (alist-hash-table
+                       `(("username" . ,(or username "*gitwatch*"))
+                         ("content" . ,message))))))
 
 ;;
 ;; Send a data model to discord
@@ -41,22 +36,25 @@
 (defgeneric send (obj)
   (:method ((obj null)) nil)
 
+  (:method ((obj string)) (discord-send string))
+
   (:method ((obj db:commit))
     (discord-send
+     (format nil "~a" (db::commit-link obj))
      (db::commit-author obj)
-     (format nil "~a" (db::commit-link obj))))
+     ))
 
   (:method ((obj db:last-commit))
     (discord-send
-     (db::last-commit-author obj)
-     (format nil "~a" (db::last-commit-link obj))))
+     (format nil "New commit:~%  time: ~w~%  link:  ~a" (db::last-commit-time obj) (db::last-commit-link obj))
+     (db::last-commit-author obj)))
 
   (:method ((obj db:issue))
     (discord-send
-     (db::issue-author obj)
-     (format nil "~a" (db::issue-link obj))))
+     (format nil "~a" (db::issue-link obj))
+     (db::issue-author obj)))
 
   (:method ((obj db:pull-request))
     (discord-send
-     (db::pull-request-author obj)
-     (format nil "~a" (db::pull-request-link obj)))))
+     (format nil "~a" (db::pull-request-link obj))
+     (db::pull-request-author obj))))

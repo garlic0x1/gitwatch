@@ -81,15 +81,28 @@
                   ;;       old  same
                   ;; nop    t     t
                   ;; send   t     f
+                  ;; nop    f     t
+                  ;; nop    f     f
+
+
+                  (cond
+                    ((and old (not same)) (progn (mailer:send new)
+                                                 (mito:update-dao new)))
+                    ((not old) (mito:insert-dao new)))
+
+                  ;;; BAD LOGIC (dont want spam on startup)
+                  ;;       old  same
+                  ;; nop    t     t
+                  ;; send   t     f
                   ;; send   f     t
                   ;; send   f     f
 
 
-                  (when (not (and old same))
-                    (mailer:send new)
-                    (if old
-                        (mito:update-dao new)
-                        (mito:insert-dao new)))
+                  ;; (when (and old (not same))
+                  ;;   (mailer:send new)
+                  ;;   (if old
+                  ;;       (mito:update-dao new)
+                  ;;       (mito:insert-dao new)))
 
 
                   ;; (mailer:send

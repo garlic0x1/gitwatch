@@ -31,7 +31,7 @@
     (mito:make-dao-instance 'db:last-commit
      :link (node-attr :href link)
      :message (node-text title)
-     :date (node-text updated-at)
+     :time (node-text updated-at)
      :author (node-text author-name)
      :repo (db::repository-link repo))))
 
