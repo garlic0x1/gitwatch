@@ -5,7 +5,11 @@ Notify a Discord channel when repos are updated
 * Usage
 1. Set up
 
-   The executable has a `migrate` subcommand to set up DB
+   Modify ./config/secrets.lisp to connect to your DB and use your Discord webhook
+
+   SQLite works fine if you aren't alredy running Postgres
+
+   The executable has a `migrate` subcommand to set up DB:
    #+begin_src shell
 ./gitwatch.ros migrate
    #+end_src
@@ -21,7 +25,48 @@ Notify a Discord channel when repos are updated
 
 3. Scrape on cron
 
-   Add this to your crontab
+   Add this to your crontab:
    #+begin_src
 * * * * * ~/common-lisp/gitwatch/gitwatch.ros scrape
    #+end_src
+
+* Help
+
+The CLI should have enough details in --help pages:
+#+begin_src
+~> ./gitwatch.ros --help
+NAME:
+  git-notify - NIL
+
+USAGE:
+  git-notify [global-options] [<command>] [command-options] [arguments ...]
+
+OPTIONS:
+      --help     display usage information and exit
+      --version  display version and exit
+
+COMMANDS:
+  migrate  Set up database (this will wipe any data you have accumulated)
+  repo     Manipulate repositories
+  scrape   Scrape repos and mail new commits
+#+end_src
+
+#+begin_src
+~> ./gitwatch.ros repo --help
+NAME:
+  git-notify repo - Manipulate repositories
+
+USAGE:
+  git-notify [global-options] repo [<command>] [command-options] [arguments ...]
+
+OPTIONS:
+      --help     display usage information and exit
+      --version  display version and exit
+
+COMMANDS:
+  ls        List repos
+  add       Add repo(s)
+  rm        Remove repo(s)
+  add-user  Add all public repos owned by user
+  rm-user   Remove all repos owned by user(s)
+#+end_src
