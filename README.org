@@ -1,0 +1,25 @@
+#+title: Readme
+
+Notify a Discord channel when repos are updated
+
+* Usage
+1. Set up
+   The executable has a `migrate` subcommand to set up DB
+   #+begin_src shell
+./gitwatch.ros migrate
+   #+end_src
+
+2. Add repositorys to watch
+   #+begin_src shell
+./gitwatch.ros repo add https://github.com/garlic0x1/gitwatch.git
+   #+end_src
+   you can confirm with this command:
+   #+begin_src shell
+./gitwatch.ros repo ls
+   #+end_src
+
+3. Scrape on cron
+   Add this to your crontab
+   #+begin_src
+* * * * * ~/common-lisp/gitwatch/gitwatch.ros scrape
+   #+end_src

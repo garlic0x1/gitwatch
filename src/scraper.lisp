@@ -1,6 +1,6 @@
 (defpackage scraper
   (:use :cl :alexandria-2 :binding-arrows :utils)
-  (:export #:commits #:last-commit))
+  (:export #:commits #:last-commit #:user-repos))
 (in-package :scraper)
 
 ;;

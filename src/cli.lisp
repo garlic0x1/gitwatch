@@ -38,7 +38,7 @@
    :name "add-user" :description "Add all public repos owned by user"
    :handler (lambda (cmd)
               (dolist (user (command-arguments cmd))
-                (dolist (repo (utils:user-repos user))
+                (dolist (repo (scraper:user-repos user))
                   (ignore-errors (mito:insert-dao repo)))))))
 
 (defvar repo/rm-user
@@ -60,7 +60,7 @@
 
 (defvar migrate
   (make-command
-   :name "migrate" :description "Set up database"
+   :name "migrate" :description "Set up database (this will wipe any data you have accumulated)"
    :handler (lambda (_cmd) (declare (ignore _cmd)) (db:migrate))))
 
 ;;
