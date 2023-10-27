@@ -1,6 +1,6 @@
 (defpackage mailer
   (:use :cl :alexandria-2 :db)
-  (:export #:send-commit))
+  (:export #:send))
 (in-package :mailer)
 
 ;;

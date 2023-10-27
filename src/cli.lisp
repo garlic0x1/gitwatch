@@ -57,7 +57,8 @@
               (dolist (repo (mito:select-dao 'db:repository))
                 (dolist (commit (scraper:commits repo))
                   (when-let ((new-commit (ignore-errors (mito:insert-dao commit))))
-                    (mailer:send-commit new-commit)))))))
+                    (format t "new commit: ~A" new-commit)
+                    (mailer:send new-commit)))))))
 
 ;;
 ;; Top level command
