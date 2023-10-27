@@ -1,6 +1,6 @@
 (defpackage db
   (:use :cl)
-  (:export #:migrate #:repository #:commit #:issue #:pull-request))
+  (:export #:migrate #:repository #:last-commit #:commit #:issue #:pull-request))
 (in-package :db)
 
 ;;
@@ -42,6 +42,13 @@
    (host :col-type (:varchar 32))
    (user :col-type (:varchar 128))
    (repo :col-type (:varchar 128))))
+
+(deftable last-commit ()
+  ((repo :references (repository link) :primary-key t)
+   (link :col-type (:varchar 256))
+   (author :col-type (:varchar 128))
+   (message :col-type (or :null :text))
+   (time :col-type (or :null (:varchar 64)))))
 
 (deftable commit ()
   ((link :col-type (:varchar 256) :primary-key t)

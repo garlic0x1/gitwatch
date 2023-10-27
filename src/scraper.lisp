@@ -36,4 +36,4 @@
      (xmls:parse)
      (xmls:node-children)
      (find-if (lambda (it) (string-equal :entry (xmls:node-name it))))
-     (curry #'node-to-entry repo)))
+     (funcall (curry #'node-to-entry repo))))
