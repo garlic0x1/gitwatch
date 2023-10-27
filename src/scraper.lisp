@@ -22,7 +22,7 @@
 (defun commits (repo)
   (ignore-errors
    (->>
-     (format nil "http://~a/~a/~a/commits.atom" (db::repository-host repo) (db::repository-user repo) (db::repository-repo repo) )
+     (format nil "https://~a/~a/~a/commits.atom" (db::repository-host repo) (db::repository-user repo) (db::repository-repo repo) )
      (dex:get)
      (xmls:parse)
      (xmls:node-children)
@@ -30,12 +30,10 @@
      (mapcar (curry #'node-to-entry repo)))))
 
 (defun last-commit (repo)
-  (ignore-errors
    (->>
-     (format nil "http://~a/~a/~a/commits.atom" (db::repository-host repo) (db::repository-user repo) (db::repository-repo repo) )
-     (print)
+     (format nil "https://~a/~a/~a/commits.atom" (db::repository-host repo) (db::repository-user repo) (db::repository-repo repo) )
      (dex:get)
      (xmls:parse)
      (xmls:node-children)
      (find-if (lambda (it) (string-equal :entry (xmls:node-name it))))
-     (node-to-entry))))
+     (curry #'node-to-entry repo)))
