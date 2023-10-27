@@ -74,7 +74,7 @@
               (dolist (repo (mito:select-dao 'db:repository))
                 (let* ((new (scraper:last-commit repo))
                        (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
-                       (same (and old (string= (db::commit-link new) (db::commit-link old)))))
+                       (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
 
                   (format t "new: ~a~%old: ~a~%same: ~a~%" new old same)
 

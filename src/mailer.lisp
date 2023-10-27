@@ -31,7 +31,7 @@
    :content (json-string (alist-hash-table
                           `(("username" . ,username)
                             ("content" . ,message)
-                            ;; ,(when image `("embeds" . (,(embed-image image))))
+                            ,(when image `("embeds" . (,(embed-image image))))
                             )))))
 
 ;;
