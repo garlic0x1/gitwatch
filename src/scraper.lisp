@@ -7,7 +7,7 @@
 ;; Functions to transform XML nodes into DB models
 ;;
 
-(defun node->commit (repo node)
+(defun node->commit* (table repo node)
   (let* ((f (rcurry #'node-child node))
          (link (funcall f :link))
          (title (funcall f :title))
@@ -17,29 +17,16 @@
          (author-name (node-child :name author))
          (author-uri (node-child :uri author)))
     (mito:make-dao-instance
-     'db:commit
+     table
      :link (node-attr :href link)
      :message (node-text title)
      :date (node-text updated-at)
      :author (node-text author-name)
      :repo (db::repository-link repo))))
 
-(defun node->last-commit (repo node)
-  (let* ((f (rcurry #'node-child node))
-         (link (funcall f :link))
-         (title (funcall f :title))
-         (updated-at (funcall f :updated))
-         (thumbnail (funcall f :thumbnail))
-         (author (funcall f :author))
-         (author-name (node-child :name author))
-         (author-uri (node-child :uri author)))
-    (mito:make-dao-instance
-     'db:last-commit
-     :link (node-attr :href link)
-     :message (node-text title)
-     :time (node-text updated-at)
-     :author (node-text author-name)
-     :repo (db::repository-link repo))))
+(defun node->commit (repo node) (node->commit* 'db:commit repo node))
+
+(defun node->last-commit (repo node) (node->commit* 'db:last-commit repo node))
 
 ;;
 ;; Scrape /commits.atom feed to get latest commits in a repo
