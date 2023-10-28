@@ -17,7 +17,7 @@
    :handler (lambda (_cmd) (declare (ignore _cmd))
               (loop :for repo :in (mito:select-dao 'db:repository)
                     :for link := (db::repository-link repo)
-                    :do (print link)))))
+                    :do (format t "~a" link)))))
 
 (defvar repo/add
   (make-command
@@ -48,10 +48,19 @@
               (dolist (user (command-arguments cmd))
                 (mito:delete-by-values 'db:repository :user user)))))
 
+(defvar repo/add-file
+  (make-command
+   :name "add-file" :description "Add a list of URLs from a file"
+   :handler (lambda (cmd)
+              (->> (first (command-arguments cmd))
+                (uiop:read-file-lines)
+                (mapcar #'utils:make-repo)
+                (mapcar #'mito:insert-dao)))))
+
 (defvar repo
   (make-command
    :name "repo" :description "Manipulate repositories"
-   :sub-commands (list repo/ls repo/add repo/rm repo/add-user repo/rm-user)
+   :sub-commands (list repo/ls repo/add repo/rm repo/add-user repo/rm-user repo/add-file)
    :handler (lambda (cmd) (print-usage-and-exit cmd t))))
 
 ;;
@@ -86,7 +95,7 @@
 
                   (cond
                     ((and old (not same)) (progn (mailer:send new) (mito:update-dao new)))
-                    ((not old) (mito:insert-dao new))))))))
+                    ((and new (not old)) (mito:insert-dao new))))))))
 
 ;;
 ;; Top level command
