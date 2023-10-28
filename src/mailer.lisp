@@ -23,7 +23,7 @@
 
   (:method ((obj db:last-commit))
     (discord-send
-     (format nil "commit: ~a~%time: ~a~%link: ~a" (db::last-commit-message obj) (db::last-commit-time obj) (db::last-commit-link obj))
+     (format nil "repo: **~a**~%commit: ~a~%time: ~a~%link: ~a" (pretty-repo (db::last-commit-repo)) (db::last-commit-message obj) (db::last-commit-time obj) (db::last-commit-link obj))
      (db::last-commit-author obj)))
 
   ;; (:method ((obj db:commit))

@@ -1,7 +1,7 @@
 (defpackage utils
   (:use :cl :alexandria-2 :binding-arrows :xmls)
   (:export #:node-text #:node-child #:node-attr
-           #:make-repo))
+           #:make-repo #:pretty-repo))
 (in-package :utils)
 
 ;;
@@ -36,3 +36,9 @@
          (user (first path))
          (repo (first (str:split "." (second path) :omit-nulls t))))
     (mito:make-dao-instance 'db:repository :link uri :host host :user user :repo repo)))
+
+(defun pretty-repo (uri)
+  (let ((repo (make-repo uri)))
+    (format nil "~a/~a"
+            (db::repository-user repo)
+            (db::repository-repo repo))))
