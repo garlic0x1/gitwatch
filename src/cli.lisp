@@ -80,22 +80,23 @@
   (make-command
    :name "scrape" :description "Scrape repos and mail new commits"
    :handler (lambda (_cmd) (declare (ignore _cmd))
-              (dolist (repo (mito:select-dao 'db:repository))
-                (let* ((new (scraper:last-commit repo))
-                       (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
-                       (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
+              (mailer:alert-on-fail :scrape
+                (dolist (repo (mito:select-dao 'db:repository))
+                  (let* ((new (scraper:last-commit repo))
+                         (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
+                         (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
 
-                  ;; cond table:
-                  ;;
-                  ;; input: | old  | same
-                  ;; nop    |  t   |   t
-                  ;; send   |  t   |   f
-                  ;; nop    |  f   |   t
-                  ;; nop    |  f   |   f
+                    ;; cond table:
+                    ;;
+                    ;; input: | old  | same
+                    ;; nop    |  t   |   t
+                    ;; send   |  t   |   f
+                    ;; nop    |  f   |   t
+                    ;; nop    |  f   |   f
 
-                  (cond
-                    ((and old (not same)) (progn (mailer:send new) (mito:update-dao new)))
-                    ((and new (not old)) (mito:insert-dao new))))))))
+                    (cond
+                      ((and old (not same)) (progn (mailer:send new) (mito:update-dao new)))
+                      ((and new (not old)) (mito:insert-dao new)))))))))
 
 ;;
 ;; Top level command

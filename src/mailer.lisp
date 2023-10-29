@@ -1,16 +1,25 @@
 (defpackage mailer
   (:use :cl :alexandria-2)
-  (:export #:send))
+  (:export #:send #:alert-on-fail))
 (in-package :mailer)
 
 ;;
 ;; Client helper functions
 ;;
 
-(defun discord-send (message &optional username)
-  (dex:post config/secrets:discord
-            :content `(("username" . ,(or username "*gitwatch*"))
-                       ("content" . ,message))))
+(defun discord-send (message &key (username "*gitwatch*") (hook config/secrets:discord))
+  (dex:post hook :content `(("username" . ,username) ("content" . ,message))))
+
+;;
+;; Log errors to Discord
+;;
+
+(defmacro alert-on-fail (name &body forms)
+  `(handler-case (progn ,@forms)
+     (error (c)
+       (discord-send (format nil "procedure: `~s`~%error: ~s" ,name c)
+                     :hook config/secrets:discord-errors)
+       nil)))
 
 ;;
 ;; Send a data model to discord
@@ -24,20 +33,4 @@
   (:method ((obj db:last-commit))
     (discord-send
      (format nil "repo: **~a**~%commit: ~a~%time: ~a~%link: ~a" (utils:pretty-repo (db::last-commit-repo obj)) (db::last-commit-message obj) (db::last-commit-time obj) (db::last-commit-link obj))
-     (db::last-commit-author obj)))
-
-  ;; (:method ((obj db:commit))
-  ;;   (discord-send
-  ;;    (format nil "~a" (db::commit-link obj))
-  ;;    (db::commit-author obj)))
-
-  ;; (:method ((obj db:issue))
-  ;;   (discord-send
-  ;;    (format nil "~a" (db::issue-link obj))
-  ;;    (db::issue-author obj)))
-
-  ;; (:method ((obj db:pull-request))
-  ;;   (discord-send
-  ;;    (format nil "~a" (db::pull-request-link obj))
-  ;;    (db::pull-request-author obj)))
-  )
+     :username (db::last-commit-author obj))))
