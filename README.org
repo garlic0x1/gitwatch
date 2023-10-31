@@ -4,6 +4,7 @@ Notify a Discord channel when repos are updated
 
 * Usage
 1. Set up
+
    Modify ./config/secrets.lisp to use your Discord hook(s)
    You can alter the database setup here if you want
 
@@ -24,20 +25,13 @@ gitwatch repo ls
 
    Add this to your crontab:
    #+begin_src
-* * * * * ~/common-lisp/gitwatch/gitwatch.ros scrape
+* * * * * ~/.local/bin/gitwatch scrape
    #+end_src
 
 * Help
-
 The CLI should have enough details in --help pages:
+** gitwatch
 #+begin_src
-~> gitwatch --help
-NAME:
-  git-notify - NIL
-
-USAGE:
-  git-notify [global-options] [<command>] [command-options] [arguments ...]
-
 OPTIONS:
       --help     display usage information and exit
       --version  display version and exit
@@ -48,14 +42,8 @@ COMMANDS:
   scrape   Scrape repos and mail new commits
 #+end_src
 
+** gitwatch repo
 #+begin_src
-~> gitwatch repo --help
-NAME:
-  git-notify repo - Manipulate repositories
-
-USAGE:
-  git-notify [global-options] repo [<command>] [command-options] [arguments ...]
-
 OPTIONS:
       --help     display usage information and exit
       --version  display version and exit
@@ -66,4 +54,5 @@ COMMANDS:
   rm        Remove repo(s)
   add-user  Add all public repos owned by user
   rm-user   Remove all repos owned by user(s)
+  add-file  Add a list of URLs from a file
 #+end_src
