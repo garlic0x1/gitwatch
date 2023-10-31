@@ -9,18 +9,23 @@ Notify a Discord channel when repos are updated
 
    SQLite works fine if you aren't alredy running Postgres
 
+   Make executable:
+   #+begin_src shell
+make install
+   #+end_src
+
    The executable has a `migrate` subcommand to set up DB:
    #+begin_src shell
-./gitwatch.ros migrate
+gitwatch migrate
    #+end_src
 
 2. Add repositories to watch
    #+begin_src shell
-./gitwatch.ros repo add https://github.com/garlic0x1/gitwatch.git
+gitwatch repo add https://github.com/garlic0x1/gitwatch.git
    #+end_src
    you can confirm with this command:
    #+begin_src shell
-./gitwatch.ros repo ls
+gitwatch repo ls
    #+end_src
 
 3. Scrape on cron
@@ -34,7 +39,7 @@ Notify a Discord channel when repos are updated
 
 The CLI should have enough details in --help pages:
 #+begin_src
-~> ./gitwatch.ros --help
+~> gitwatch --help
 NAME:
   git-notify - NIL
 
@@ -52,7 +57,7 @@ COMMANDS:
 #+end_src
 
 #+begin_src
-~> ./gitwatch.ros repo --help
+~> gitwatch repo --help
 NAME:
   git-notify repo - Manipulate repositories
 
