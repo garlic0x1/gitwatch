@@ -4,21 +4,13 @@ Notify a Discord channel when repos are updated
 
 * Usage
 1. Set up
+   Modify ./config/secrets.lisp to use your Discord hook(s)
+   You can alter the database setup here if you want
 
-   Modify ./config/secrets.lisp to connect to your DB and use your Discord webhook
-
-   SQLite works fine if you aren't alredy running Postgres
-
-   Make executable:
+   Install executable:
    #+begin_src shell
 make install
    #+end_src
-
-   The executable has a `migrate` subcommand to set up DB:
-   #+begin_src shell
-gitwatch migrate
-   #+end_src
-
 2. Add repositories to watch
    #+begin_src shell
 gitwatch repo add https://github.com/garlic0x1/gitwatch.git

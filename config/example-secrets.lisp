@@ -14,12 +14,25 @@
 ;;
 
 (defun db-connect ()
+
+  ;; NOTE
+  ;; if you change this, you might want to modify `make clean`
+  ;; if you want to uninstall properly
+
+  ;; SQLITE EXAMPLE (default)
   (mito:connect-toplevel
-   :postgres
-   :username "postgres"
-   :password "postgres"
-   :host "localhost"
-   :database-name "dbname"))
+   :sqlite3
+   :database-name "/tmp/gitwatch.sqlite3")
+
+  ;; POSTGRES EXAMPLE
+  ;;
+  ;; (mito:connect-toplevel
+  ;;  :postgres
+  ;;  :username "postgres"
+  ;;  :password "postgres"
+  ;;  :host "localhost"
+  ;;  :database-name "dbname")
+  )
 
 ;;
 ;; Set discord hook for notifications

@@ -17,8 +17,10 @@ build:
 
 install: build
 	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch
+	gitwatch migrate
 
 clean:
 	rm $(INSTALL_DIRECTORY)/gitwatch
+	rm /tmp/gitwatch.sqlite3
 
 # end
