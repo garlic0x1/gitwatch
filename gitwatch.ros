@@ -11,4 +11,6 @@ exec ros -Q -- $0 "$@"
   (:use :cl))
 (in-package :ros/script/gitwatch)
 
-(defun main (&rest argv) (clingon:run gitwatch/cli:cli argv))
+(defun main (&rest argv)
+  (config/secrets:db-connect)
+  (clingon:run gitwatch/cli:cli argv))

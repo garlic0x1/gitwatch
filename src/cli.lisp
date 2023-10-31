@@ -17,7 +17,7 @@
    :handler (lambda (_cmd) (declare (ignore _cmd))
               (loop :for repo :in (mito:select-dao 'db:repository)
                     :for link := (db::repository-link repo)
-                    :do (format t "~a" link)))))
+                    :do (format t "~a~%" link)))))
 
 (defvar repo/add
   (make-command
@@ -95,7 +95,7 @@
                     ;; nop    |  f   |   f
 
                     (cond
-                      ((and old (not same)) (progn (mailer:send new) (mito:update-dao new)))
+                      ((and old (not same)) (mailer:send new) (mito:update-dao new))
                       ((and new (not old)) (mito:insert-dao new)))))))))
 
 ;;

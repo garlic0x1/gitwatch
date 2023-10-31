@@ -1,18 +1,19 @@
 (defpackage #:config/secrets
   (:use :cl)
-  (:export #:discord-errors #:discord))
+  (:export #:db-connect #:discord-errors #:discord))
 (in-package :config/secrets)
 
 ;;
 ;; Establish database connection
 ;;
 
-(mito:connect-toplevel
- :postgres
- :username "postgres"
- :password "postgres"
- :host "localhost"
- :database-name "debug_test")
+(defun db-connect ()
+  (mito:connect-toplevel
+   :postgres
+   :username "postgres"
+   :password "postgres"
+   :host "localhost"
+   :database-name "debug_test"))
 
 ;;
 ;; Set discord hook for notifications
