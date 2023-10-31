@@ -104,6 +104,6 @@
 
 (defvar cli
   (make-command
-   :name "git-notify"
+   :name "gitwatch"
    :sub-commands (list migrate repo scrape)
    :handler (lambda (cmd) (print-usage-and-exit cmd t))))

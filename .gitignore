@@ -6,3 +6,4 @@ tmp/
 gitwatch
 *.fasl
 *.lx64fsl
+config/secrets.*
