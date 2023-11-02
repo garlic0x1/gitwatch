@@ -1,11 +1,7 @@
 (defpackage :gitwatch/cli
   (:use :cl :alexandria-2 :binding-arrows :mito)
-  (:import-from #:cl-workers #:close-and-join-workers)
   (:import-from #:mailer #:with-mailer)
-  (:import-from :clingon
-                #:print-usage-and-exit
-                #:make-command
-                #:command-arguments)
+  (:import-from :clingon #:print-usage-and-exit #:make-command #:command-arguments)
   (:export #:cli))
 (in-package :gitwatch/cli)
 

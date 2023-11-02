@@ -1,4 +1,4 @@
-#+title: Readme
+#+title: Gitwatch
 
 Notify a Discord channel when repos are updated
 
