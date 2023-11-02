@@ -5,7 +5,7 @@
 (in-package :mailer)
 
 ;;
-;; Client actor
+;; Client actor convenience macro
 ;;
 
 (defmacro with-mailer (&body body)

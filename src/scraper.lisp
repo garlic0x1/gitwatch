@@ -1,6 +1,6 @@
 (defpackage scraper
   (:use :cl :alexandria-2 :binding-arrows :utils)
-  (:export #:commits #:last-commit #:user-repos))
+  (:export #:commits #:last-commit #:user-repos #:scrape-and-mail))
 (in-package :scraper)
 
 ;;
@@ -12,10 +12,11 @@
          (link (funcall f :link))
          (title (funcall f :title))
          (updated-at (funcall f :updated))
-         (thumbnail (funcall f :thumbnail))
+         ;; (thumbnail (funcall f :thumbnail))
          (author (funcall f :author))
          (author-name (node-child :name author))
-         (author-uri (node-child :uri author)))
+         ;; (author-uri (node-child :uri author))
+         )
     (mito:make-dao-instance
      table
      :link (node-attr :href link)
@@ -64,3 +65,24 @@
     (yason:parse <>)
     (mapcar (curry #'gethash "clone_url") <>)
     (mapcar #'make-repo <>)))
+
+;;
+;; High level scraping/mailing operation
+;;
+
+(defun scrape-and-mail (repo)
+  (let* ((new (last-commit repo))
+         (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
+         (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
+
+    ;; cond table:
+    ;;
+    ;; input: | old  | same
+    ;; nop    |  t   |   t
+    ;; send   |  t   |   f
+    ;; nop    |  f   |   t
+    ;; nop    |  f   |   f
+
+    (cond
+      ((and old (not same)) (mailer:send new) (mito:update-dao new))
+      ((and new (not old)) (mito:insert-dao new)))))

@@ -81,25 +81,25 @@
 (defvar scrape
   (make-command
    :name "scrape" :description "Scrape repos and mail new commits"
-   :handler
-   (lambda (_cmd) (declare (ignore _cmd))
-     (with-mailer
-       (dolist (repo (select-dao 'db:repository))
-         (let* ((new (scraper:last-commit repo))
-                (old (find-dao 'db:last-commit :repo (db::repository-link repo)))
-                (same (and old (string= (db::last-commit-link new) (db::last-commit-link old)))))
+   :handler (lambda (_cmd) (declare (ignore _cmd))
+              (with-mailer
+                (dolist (repo (select-dao 'db:repository))
+                  (scraper:scrape-and-mail repo))))))
 
-           ;; cond table:
-           ;;
-           ;; input: | old  | same
-           ;; nop    |  t   |   t
-           ;; send   |  t   |   f
-           ;; nop    |  f   |   t
-           ;; nop    |  f   |   f
+;;
+;; Start as a service, as an alternative to cron
+;;
 
-           (cond
-             ((and old (not same)) (mailer:send new) (update-dao new))
-             ((and new (not old)) (insert-dao new)))))))))
+(defvar service
+  (make-command
+   :name "service" :description "Start as a service that scrapes periodically"
+   :handler (lambda (cmd)
+              (with-mailer
+                (cl-cron:make-cron-job
+                 (lambda () (dolist (repo (select-dao 'db:repository))
+                         (scraper:scrape-and-mail repo))))
+                (bt:join-thread (cl-cron:start-cron))))))
+
 ;;
 ;; Top level command
 ;;

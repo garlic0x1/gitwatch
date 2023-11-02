@@ -4,6 +4,7 @@
                :cl-workers
                :dexador
                :clingon
+               :cl-cron
                :trivia
                :yason
                :quri
