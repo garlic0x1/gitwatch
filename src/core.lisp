@@ -11,4 +11,4 @@
 
   ;; wait for end
   (cl-workers:close-worker mailer::*mailer*)
-  (cl-workers:join-workers mailer::*mailer*))
+  (cl-workers:join-worker mailer::*mailer*))
