@@ -20,4 +20,5 @@
   (db-connect)
   (run cli argv)
   (print "closing")
+  (force-output)
   (close-and-join-workers *mailer*))
