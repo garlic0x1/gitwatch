@@ -19,4 +19,5 @@
   (start-mailer)
   (db-connect)
   (run cli argv)
+  (print "closing")
   (close-and-join-workers *mailer*))
