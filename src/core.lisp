@@ -7,5 +7,6 @@
 (in-package :gitwatch)
 
 (defun main (argv)
-  (db-connect)
-  (run cli argv))
+  (mailer:alert-on-fail :cli-entrypoint
+    (db-connect)
+    (run cli argv)))
