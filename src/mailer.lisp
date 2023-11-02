@@ -1,5 +1,6 @@
 (defpackage mailer
   (:use :cl :alexandria-2)
+  (:import-from #:cl-workers #:defworker)
   (:export #:send #:alert-on-fail #:start-mailer))
 (in-package :mailer)
 
@@ -8,14 +9,9 @@
 ;;
 
 (defvar *mailer* nil)
-(cl-workers:defworker mailer () (hook payload)
-  (print "mailing")
-  (print hook)
-  (print payload)
+(defworker mailer () (hook payload)
   (sleep 1)
-  (dex:post hook :content payload)
-  (print "mailing")
-  )
+  (dex:post hook :content payload))
 (defun start-mailer () (setf *mailer* (mailer)))
 
 ;;
