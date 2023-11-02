@@ -10,4 +10,5 @@
     (clingon:run gitwatch/cli:cli argv))
 
   ;; wait for end
+  (cl-workers:close-worker mailer::*mailer*)
   (cl-workers:join-workers mailer::*mailer*))
