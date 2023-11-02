@@ -9,9 +9,11 @@
 
 (defvar *mailer* nil)
 (cl-workers:defworker mailer () (hook payload)
-  (format t "mailing")
+  (print "mailing")
   (sleep 1)
-  (dex:post hook :content payload))
+  (dex:post hook :content payload)
+  (print "mailing")
+  )
 (defun start-mailer () (setf *mailer* (mailer)))
 
 ;;
@@ -19,7 +21,7 @@
 ;;
 
 (defun discord-send (message &key (username "*gitwatch*") (hook config/secrets:discord))
-  (format t "sending")
+  (print "sending")
   (cl-workers:send *mailer* hook `(("username" . ,username)
                                    ("content" . ,message))))
 
