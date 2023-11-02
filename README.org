@@ -3,30 +3,30 @@
 Notify a Discord channel when repos are updated
 
 * Usage
-1. Set up
+** Set up
+Modify ./config/secrets.lisp to use your Discord hook(s)
+You can alter the database setup here if you want
 
-   Modify ./config/secrets.lisp to use your Discord hook(s)
-   You can alter the database setup here if you want
-
-   Install executable:
-   #+begin_src shell
+Install executable:
+#+begin_src shell
 make install
-   #+end_src
-2. Add repositories to watch
-   #+begin_src shell
+#+end_src
+** Add repositories to watch
+#+begin_src shell
 gitwatch repo add https://github.com/garlic0x1/gitwatch.git
-   #+end_src
-   you can confirm with this command:
-   #+begin_src shell
+#+end_src
+you can confirm with this command:
+#+begin_src shell
 gitwatch repo ls
-   #+end_src
-
-3. Scrape on cron
-
-   Add this to your crontab:
-   #+begin_src
-* * * * * ~/.local/bin/gitwatch scrape
-   #+end_src
+#+end_src
+** Start scraping
+*** Using `gitwatch service` (recommended)
+#+begin_src shell
+gitwatch service
+#+end_src
+*** Using cron:
+Add this to your crontab:
+`* * * * * ~/.local/bin/gitwatch scrape`
 
 * Help
 The CLI should have enough details in --help pages:
@@ -40,6 +40,7 @@ COMMANDS:
   migrate  Set up database (this will wipe any data you have accumulated)
   repo     Manipulate repositories
   scrape   Scrape repos and mail new commits
+  service  Start as a service that scrapes periodically
 #+end_src
 
 ** gitwatch repo

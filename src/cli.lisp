@@ -107,5 +107,5 @@
 (defvar cli
   (make-command
    :name "gitwatch"
-   :sub-commands (list migrate repo scrape)
+   :sub-commands (list migrate repo scrape service)
    :handler (lambda (cmd) (print-usage-and-exit cmd t))))

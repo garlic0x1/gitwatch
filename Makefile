@@ -23,6 +23,9 @@ install: build prepare
 	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch
 	gitwatch migrate
 
+update: build
+	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch
+
 clean:
 	rm $(INSTALL_DIRECTORY)/gitwatch
 	rm $(DB_LOCATION)
