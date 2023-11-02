@@ -22,7 +22,8 @@
   ;; SQLITE EXAMPLE (default)
   (mito:connect-toplevel
    :sqlite3
-   :database-name "/tmp/gitwatch.sqlite3")
+   :database-name
+   (concatenate 'string (uiop:getenv "HOME") "/.local/gitwatch.sqlite3"))
 
   ;; POSTGRES EXAMPLE
   ;;

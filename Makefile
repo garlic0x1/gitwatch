@@ -9,18 +9,22 @@
 #
 
 INSTALL_DIRECTORY = ~/.local/bin
+DB_LOCATION = ~/.local/gitwatch.sqlite3
 
 default: install
+
+prepare:
+	touch $(DB_LOCATION)
 
 build:
 	ros build gitwatch.ros
 
-install: build
+install: build prepare
 	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch
 	gitwatch migrate
 
 clean:
 	rm $(INSTALL_DIRECTORY)/gitwatch
-	rm /tmp/gitwatch.sqlite3
+	rm $(DB_LOCATION)
 
 # end

@@ -56,3 +56,6 @@ COMMANDS:
   rm-user   Remove all repos owned by user(s)
   add-file  Add a list of URLs from a file
 #+end_src
+
+** gh api
+The add-user and rm-user commands depend on the github CLI program to be installed and authenticated

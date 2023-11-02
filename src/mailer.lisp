@@ -1,14 +1,25 @@
 (defpackage mailer
   (:use :cl :alexandria-2)
-  (:export #:send #:alert-on-fail))
+  (:export #:send #:alert-on-fail #:start-mailer))
 (in-package :mailer)
 
 ;;
-;; Client helper functions
+;; Client actor
+;;
+
+(defvar *mailer* nil)
+(cl-workers:defworker mailer () (hook payload)
+  (sleep 1)
+  (dex:post hook :content payload))
+(defun start-mailer () (setf *mailer* (mailer)))
+
+;;
+;; Send signal to mailer actor
 ;;
 
 (defun discord-send (message &key (username "*gitwatch*") (hook config/secrets:discord))
-  (dex:post hook :content `(("username" . ,username) ("content" . ,message))))
+  (cl-workers:send *mailer* hook `(("username" . ,username)
+                                   ("content" . ,message))))
 
 ;;
 ;; Log errors to Discord
