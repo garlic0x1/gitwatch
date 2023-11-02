@@ -22,6 +22,7 @@ build:
 install: build prepare
 	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch
 	gitwatch migrate
+	gitwatch repo add "https://github.com/garlic0x1/gitwatch.git"
 
 update: build
 	mv gitwatch $(INSTALL_DIRECTORY)/gitwatch

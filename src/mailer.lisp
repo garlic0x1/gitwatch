@@ -45,7 +45,10 @@
   (:method ((obj string)) (discord-send obj))
 
   (:method ((obj db:last-commit))
-    (with-slots (repo message time link author) obj
-      (discord-send
-       (format nil "repo: **~a**~%commit: ~a~%time: ~a~%link: ~a" (utils:pretty-repo repo) message time link)
-       :username author))))
+    (discord-send
+     (format nil "repo: **~a**~%commit: ~a~%time: ~a~%link: ~a"
+             (utils:pretty-repo (db::last-commit-repo obj))
+             (db::last-commit-message obj)
+             (db::last-commit-time obj)
+             (db::last-commit-link obj))
+     :username (db::last-commit-author obj))))
