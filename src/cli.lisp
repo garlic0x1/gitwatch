@@ -80,6 +80,7 @@
   (make-command
    :name "scrape" :description "Scrape repos and mail new commits"
    :handler (lambda (_cmd) (declare (ignore _cmd))
+              (mailer:start-mailer)
               (dolist (repo (mito:select-dao 'db:repository))
                 (let* ((new (scraper:last-commit repo))
                        (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
@@ -95,7 +96,9 @@
 
                   (cond
                     ((and old (not same)) (mailer:send new) (mito:update-dao new))
-                    ((and new (not old)) (mito:insert-dao new))))))))
+                    ((and new (not old)) (mito:insert-dao new)))))
+
+              (close-and-join-workers mailer::*mailer*))))
 
 ;;
 ;; Top level command
