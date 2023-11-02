@@ -1,5 +1,6 @@
 (defpackage :gitwatch/cli
   (:use :cl :alexandria-2 :binding-arrows)
+  (:import-from #:cl-workers #:close-and-join-workers)
   (:import-from :clingon
                 #:print-usage-and-exit
                 #:make-command
