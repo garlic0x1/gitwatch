@@ -10,6 +10,8 @@
 (defvar *mailer* nil)
 (cl-workers:defworker mailer () (hook payload)
   (print "mailing")
+  (print hook)
+  (print payload)
   (sleep 1)
   (dex:post hook :content payload)
   (print "mailing")
