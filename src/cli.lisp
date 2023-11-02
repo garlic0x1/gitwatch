@@ -1,6 +1,7 @@
 (defpackage :gitwatch/cli
   (:use :cl :alexandria-2 :binding-arrows)
   (:import-from #:cl-workers #:close-and-join-workers)
+  (:import-from #:mailer #:start-mailer #:*mailer*)
   (:import-from :clingon
                 #:print-usage-and-exit
                 #:make-command
@@ -81,7 +82,7 @@
   (make-command
    :name "scrape" :description "Scrape repos and mail new commits"
    :handler (lambda (_cmd) (declare (ignore _cmd))
-              (mailer:start-mailer)
+              (start-mailer)
               (dolist (repo (mito:select-dao 'db:repository))
                 (let* ((new (scraper:last-commit repo))
                        (old (mito:find-dao 'db:last-commit :repo (db::repository-link repo)))
@@ -99,7 +100,8 @@
                     ((and old (not same)) (mailer:send new) (mito:update-dao new))
                     ((and new (not old)) (mito:insert-dao new)))))
 
-              (close-and-join-workers mailer::*mailer*))))
+              ;; wait for all messages to be sent
+              (close-and-join-workers *mailer*))))
 
 ;;
 ;; Top level command
