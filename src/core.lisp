@@ -3,7 +3,7 @@
   (:export #:main))
 (in-package :gitwatch)
 
-(defun main (&rest argv)
+(defun main (argv)
   (mailer:start-mailer)
   (mailer:alert-on-fail "gitwatch:main"
     (config/secrets:db-connect)
