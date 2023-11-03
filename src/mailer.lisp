@@ -1,6 +1,6 @@
 (defpackage mailer
   (:use :cl :alexandria-2)
-  (:import-from #:cl-workers #:spawn-worker #:close-and-join-workers)
+  (:import-from #:cl-workers #:defworker/global #:close-and-join-workers)
   (:export #:send #:alert-on-fail #:with-mailer))
 (in-package :mailer)
 
@@ -10,7 +10,7 @@
 
 (defmacro with-mailer (&body body)
   `(progn
-     (spawn-worker :mailer () (hook payload)
+     (defworker/global :mailer () (hook payload)
        (dex:post hook :content payload)
        (sleep 1))
      ,@body
