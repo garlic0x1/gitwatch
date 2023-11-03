@@ -3,7 +3,12 @@
 Notify a Discord channel when repos are updated
 
 * Usage
-** Set up
+** Install
+Dependencies:
+- [[https://roswell.github.io/][Roswell]]
+- [[https://www.quicklisp.org/beta/][Quicklisp]]
+- [[https://github.com/garlic0x1/cl-workers][cl-workers]]
+
 Modify ./config/secrets.lisp to use your Discord hook(s)
 You can alter the database setup here if you want
 
